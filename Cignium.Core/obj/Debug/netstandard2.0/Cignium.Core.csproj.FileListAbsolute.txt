@@ -1,0 +1,8 @@
+C:\Users\angello.rodriguez\source\repos\CigniumApp1\Cignium.Core\bin\Debug\netstandard2.0\Cignium.Core.deps.json
+C:\Users\angello.rodriguez\source\repos\CigniumApp1\Cignium.Core\bin\Debug\netstandard2.0\Cignium.Core.dll
+C:\Users\angello.rodriguez\source\repos\CigniumApp1\Cignium.Core\bin\Debug\netstandard2.0\Cignium.Core.pdb
+C:\Users\angello.rodriguez\source\repos\CigniumApp1\Cignium.Core\obj\Debug\netstandard2.0\Cignium.Core.csprojAssemblyReference.cache
+C:\Users\angello.rodriguez\source\repos\CigniumApp1\Cignium.Core\obj\Debug\netstandard2.0\Cignium.Core.AssemblyInfoInputs.cache
+C:\Users\angello.rodriguez\source\repos\CigniumApp1\Cignium.Core\obj\Debug\netstandard2.0\Cignium.Core.AssemblyInfo.cs
+C:\Users\angello.rodriguez\source\repos\CigniumApp1\Cignium.Core\obj\Debug\netstandard2.0\Cignium.Core.dll
+C:\Users\angello.rodriguez\source\repos\CigniumApp1\Cignium.Core\obj\Debug\netstandard2.0\Cignium.Core.pdb

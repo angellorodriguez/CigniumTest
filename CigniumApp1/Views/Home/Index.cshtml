@@ -1,0 +1,199 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <script type="text/javascript">
+        
+        var url ="http://localhost:60040/api/Premium";
+        function getPremium() {
+            //This function validate entry data and call web API
+            let state = $('#idState').val();
+            let dob = $('#idDOB').val();
+            let age = $('#idAge').val();
+            clearCalculation();
+            let month2 = parseInt(dob.substring(5, 7));
+       
+            let date = new Date(dob);
+            //this javascript function getMonth() is not working well when day is less than 10
+            let month = date.getMonth() + 1;
+            let messageError = "";
+            messageError = validateNoNULLS();
+            if (messageError=="")
+            messageError = validateAgeWDate(dob, age);
+ 
+            if (messageError == "") {
+                // three parameters are sent
+                let url2 = url + "/" + state + "/" + month2 + "/" + age;
+                fetch(url2).then(function (response) {
+                    return response.json();
+
+                }).then(function (Data) {
+
+                    if (Data.length > 0) {
+                        let a = JSON.stringify(Data);
+                        let b = JSON.parse(a);
+                        let c = parseFloat(b[0]["premium"].toString());
+
+                        $('#idPremium').val(c.toFixed(2));
+                        document.getElementById("Frequencies").removeAttribute("disabled");
+                        changeFrequency();
+                    }
+                    else {
+                        alert("There is not data for filters provided.");
+                    }
+                })
+                    .catch(function (error) {
+                        console.log('There is a problem when connecting to the Web Service: \n', error);
+                    });
+            }
+            else {  alert(messageError);}
+        }
+
+        function clearCalculation()
+        {
+            document.getElementById("Frequencies").setAttribute("disabled", "disabled");
+            $('#idPremium').val("");
+            $('#idAnnual').val("");
+            $('#idMonthly').val("");
+        }
+
+        function changeFrequency() {
+
+            let premium = $('#idPremium').val();
+            let premiumFloat = parseFloat(premium);
+            let acFreq = $("#Frequencies").val();
+            let monthly = premiumFloat / parseInt(acFreq);
+            let annual = premiumFloat * (12/parseInt(acFreq));
+            $("#idMonthly").val(monthly.toFixed(2));
+            $("#idAnnual").val(annual.toFixed(2));
+        }
+
+
+
+        function validateAge() {
+            let bolRight = validateAgeSub();
+            if (!bolRight)
+            alert( "Please enter an age between 18 and 100");
+        }
+
+        function validateAgeSub() {
+            let age= $('#idAge').val();
+            if (age.length == 0 || age < 18 || age > 100) {
+                $('#idAge').val("");
+                return false;
+            }
+            return true;
+        }
+
+        function validateState() {
+            let bolRight = validateStateSub();
+            if (!bolRight)
+                alert( "Please enter an State Code, 2 character size.");
+        }
+
+        function validateStateSub() {
+
+            let state = $('#idState').val();
+            if (state.length < 2) {
+                $('#idState').val("");
+                return false;
+            }
+            return true;
+        }
+
+        function validateAgeWDate(dob,years) {
+            let date = new Date(dob);
+            let year = date.getFullYear();
+            let años = (Date.now() - date) / (31557600000)
+            años = parseInt(años, 10);
+            if (años == years)
+                return "";
+            return "The DOB does not match the given age.";
+        }
+
+        function validateNoNULLS() {
+            if (validateStateSub() && validateAgeSub())
+                return "";
+            else return "All the filters are mandatory";
+
+        }
+
+        function isNumberKey(evt)
+        {
+        let age= $('#idAge').val();
+        if (age.length > 2)
+         return false
+         var charCode = (evt.which) ? evt.which : event.keyCode
+         if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+         return true;
+        }
+
+ function isStringKey(evt)
+ {
+     let st = $('#idState').val();
+     if (st.length > 1)
+         return false
+
+         var charCode = (evt.which) ? evt.which : event.keyCode
+         if ((event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123))
+            return true;
+
+         return false;
+        }
+
+        window.onload = function() {
+  $( "#myDiv" ).datepicker();
+        }
+    </script>
+    <div class="text-center">
+
+
+        <h1 class="display-4">Welcome to Cignium Test</h1>
+        <p>You can get the premium by filling the following information:</p>
+        <div id="myDiv"></div>
+        <hr />
+        <table>
+            <tbody>
+                <tr>
+                    <td>Date of birth:</td>
+                    <td><input id="idDOB" type="date" name="trip-start" value="1990-07-01" min="1920-01-01" max="2120-12-31" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" class="form-control" /></td>
+                    
+                </tr>
+                <tr>
+                    <td>State: </td>
+                    <td><input id="idState" onkeypress="return isStringKey(event)"  type="text"  onblur="validateState();"  value="" class="form-control" /></td>
+                </tr>
+                <tr>
+                    <td>Age:</td>
+                    <td><input  id="idAge" onkeypress="return isNumberKey(event)" type="number" onblur="validateAge();"  value="" class="form-control" /></td>
+                    <td><span id="ageError"></span></td>
+                </tr>
+                <tr>
+                    <td><input type="button" value="Get Value" id="GetPremium" onclick="getPremium();" class="btn-primary btn" /></td>
+                    <td><input id="idPremium"  type="text"  value="" class="form-control" disabled="disabled"/></td>
+                    <td>
+                        <select name="Frequencies" id="Frequencies" onchange="changeFrequency()" disabled="disabled" class="form-control">
+                            <option value="1" selected="selected">Monthly</option>
+                            <option value="3">Quarterly</option>
+                            <option value="6">Semi-Annually</option>
+                            <option value="12">Anually</option>
+                        </select>
+                    </td>
+                    <td>Annual:</td>
+                    <td><input id="idAnnual"  type="text"  value="" class="form-control" disabled="disabled"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Monthly:</td>
+                    <td><input id="idMonthly"  type="text"  value="" class="form-control" disabled="disabled"/></td>
+                </tr>
+            </tbody>
+
+        </table>
+
+
+    </div>
